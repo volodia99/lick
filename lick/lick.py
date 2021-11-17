@@ -62,7 +62,7 @@ def interpol(
 
     return (x, y, gv1, gv2, gfield)
 
-def lick(v1, v2, *, niter_lic=4, kernel_length=71, lightsource=True):
+def lick(v1, v2, *, niter_lic=5, kernel_length=101, lightsource=True):
     v1 = v1.astype(np.float32)
     v2 = v2.astype(np.float32)
     texture = random_noise(
@@ -108,6 +108,39 @@ def lick(v1, v2, *, niter_lic=4, kernel_length=71, lightsource=True):
 # alpha_transparency=True,
 
 def lick_box(
+    x, 
+    y, 
+    v1, 
+    v2, 
+    field, 
+    *, 
+    size_interpolated=None, 
+    xmin=None, 
+    xmax=None, 
+    ymin=None, 
+    ymax=None, 
+    niter_lic=5, 
+    kernel_length=101, 
+    lightsource=True, 
+):
+    yy, xx = np.meshgrid(y, x)
+    xi, yi, v1i, v2i, fieldi = interpol(
+            xx,
+            yy,
+            v1,
+            v2,
+            field,
+            xmin=xmin,
+            xmax=xmax,
+            ymin=ymin,
+            ymax=ymax,
+            size_interpolated=size_interpolated,
+    )
+    Xi, Yi = np.meshgrid(xi, yi)
+    licv = lick(v1i, v2i, niter_lic=niter_lic, kernel_length=kernel_length, lightsource=lightsource)
+    return(Xi, Yi, v1i, v2i, fieldi, licv)
+
+def lick_box_plot(
     ax,
     x, 
     y, 
@@ -136,24 +169,21 @@ def lick_box(
     alpha=0.03,
     **kwargs, 
 ):
-    # print("beginning")
-    yy, xx = np.meshgrid(y, x)
-    # print("meshgrid")
-    xi, yi, v1i, v2i, fieldi = interpol(
-            xx,
-            yy,
-            v1,
-            v2,
-            field,
-            xmin=xmin,
-            xmax=xmax,
-            ymin=ymin,
-            ymax=ymax,
-            size_interpolated=size_interpolated,
+    Xi, Yi, v1i, v2i, fieldi, licv = lick_box(
+        x, 
+        y, 
+        v1, 
+        v2, 
+        field, 
+        size_interpolated=size_interpolated, 
+        xmin=xmin, 
+        xmax=xmax, 
+        ymin=ymin, 
+        ymax=ymax, 
+        niter_lic=niter_lic, 
+        kernel_length=kernel_length, 
+        lightsource=lightsource, 
     )
-    # print("interpol function")
-
-    licv = lick(v1i, v2i, niter_lic=niter_lic, kernel_length=kernel_length, lightsource=lightsource)
 
     # print("lic function")
     if log:
@@ -174,9 +204,6 @@ def lick_box(
         vmax = fieldi.max()
         # print(f"{vmax=}")
 
-    # print("vmin/vmax estimate")
-    Xi, Yi = np.meshgrid(xi, yi)
-
     if alpha_transparency:
         im = ax.pcolormesh(Xi, Yi, fieldi, cmap=cmap, shading="nearest", vmin=vmin, vmax=vmax, rasterized=True)
         im.set_edgecolor('face')
@@ -190,11 +217,13 @@ def lick_box(
     cax = divider.append_axes("right", size="5%", pad=0.05)
     cbar = plt.colorbar(im, cax=cax, orientation='vertical')#, format='%.0e')
     if streamlines:
-        strm = ax.streamplot(xi, yi, v1i, v2i, density=density, arrowstyle="->", linewidth=0.8, color=color_arrow, cmap=cmap_arrow)
+        strm = ax.streamplot(Xi, Yi, v1i, v2i, density=density, arrowstyle="->", linewidth=0.8, color=color_arrow, cmap=cmap_arrow)
+    ax.set_xlim(xmin,xmax)
+    ax.set_ylim(ymin,ymax)
     #print("streamplot")
 
 
-def test_lick_box(cmap=None):
+def test_lick_box_plot(cmap=None):
     plt.close("all")
     fig, ax = plt.subplots()
     x = np.geomspace(0.1,10,100)
@@ -203,5 +232,5 @@ def test_lick_box(cmap=None):
     v1 = np.cos(a)
     v2 = np.sin(b)
     field = v1**2+v2**2
-    lick_box(ax, x, y, v1, v2, field, cmap=cmap, refinement=5, kernel_length=100, streamlines=True)
+    lick_box_plot(ax, x, y, v1, v2, field, cmap=cmap, refinement=5, kernel_length=100, streamlines=True)
     plt.show()
