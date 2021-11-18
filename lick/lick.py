@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from typing import Optional
+
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -11,18 +13,18 @@ from skimage import exposure
 from licplot import lic_internal
 
 def interpol(
-    xx,
-    yy,
-    v1,
-    v2,
-    field,
+    xx:np.ndarray,
+    yy:np.ndarray,
+    v1:np.ndarray,
+    v2:np.ndarray,
+    field:np.ndarray,
     *,
-    method="linear",
-    xmin=None,
-    xmax=None,
-    ymin=None,
-    ymax=None,
-    size_interpolated=None,
+    method:str="linear",
+    xmin:Optional[float] = None,
+    xmax:Optional[float] = None,
+    ymin:Optional[float] = None,
+    ymax:Optional[float] = None,
+    size_interpolated:Optional[int] = None,
 ):
     if xmin is None:
         xmin = xx.min()
@@ -62,7 +64,14 @@ def interpol(
 
     return (x, y, gv1, gv2, gfield)
 
-def lick(v1, v2, *, niter_lic=5, kernel_length=101, lightsource=True):
+def lick(
+    v1:np.ndarray, 
+    v2:np.ndarray, 
+    *, 
+    niter_lic:int = 5, 
+    kernel_length:int = 101, 
+    lightsource:bool = True,
+):
     v1 = v1.astype(np.float32)
     v2 = v2.astype(np.float32)
     texture = random_noise(
@@ -90,38 +99,21 @@ def lick(v1, v2, *, niter_lic=5, kernel_length=101, lightsource=True):
 
     return image
 
-# xmin = 0.3
-# xmax=2.5
-# ymin=-0.8
-# ymax=0.8
-# refinement = 3
-# niter_lic = 10
-# kernel_length=70
-# log = False
-# cmap = cb.cbmap("cb.extreme_rainbow")
-# vmin = -6.4
-# vmax = 0
-# density = 3
-# fig, ax = plt.subplots()
-# lightsource=True, 
-# streamlines=False, 
-# alpha_transparency=True,
-
 def lick_box(
-    x, 
-    y, 
-    v1, 
-    v2, 
-    field, 
+    x:np.ndarray, 
+    y:np.ndarray, 
+    v1:np.ndarray, 
+    v2:np.ndarray, 
+    field:np.ndarray, 
     *, 
-    size_interpolated=None, 
-    xmin=None, 
-    xmax=None, 
-    ymin=None, 
-    ymax=None, 
-    niter_lic=5, 
-    kernel_length=101, 
-    lightsource=True, 
+    size_interpolated:Optional[int] = None, 
+    xmin:Optional[float] = None, 
+    xmax:Optional[float] = None, 
+    ymin:Optional[float] = None, 
+    ymax:Optional[float] = None, 
+    niter_lic:int = 5, 
+    kernel_length:int = 101, 
+    lightsource:bool = True, 
 ):
     yy, xx = np.meshgrid(y, x)
     xi, yi, v1i, v2i, fieldi = interpol(
@@ -141,32 +133,33 @@ def lick_box(
     return(Xi, Yi, v1i, v2i, fieldi, licv)
 
 def lick_box_plot(
+    fig,
     ax,
-    x, 
-    y, 
-    v1, 
-    v2, 
-    field, 
+    x:np.ndarray, 
+    y:np.ndarray, 
+    v1:np.ndarray, 
+    v2:np.ndarray, 
+    field:np.ndarray, 
     *, 
-    vmin=None, 
-    vmax=None, 
-    size_interpolated=None, 
-    xmin=None, 
-    xmax=None, 
-    ymin=None, 
-    ymax=None, 
-    niter_lic=5, 
-    kernel_length=101, 
-    log=False, 
-    cmap=None, 
-    nbin=None, 
-    density=1, 
-    color_arrow="w",
-    cmap_arrow="gray_r", 
-    lightsource=True, 
-    streamlines=False, 
-    alpha_transparency=True,
-    alpha=0.03,
+    vmin:Optional[float] = None, 
+    vmax:Optional[float] = None, 
+    size_interpolated:Optional[int] = None, 
+    xmin:Optional[float] = None, 
+    xmax:Optional[float] = None, 
+    ymin:Optional[float] = None, 
+    ymax:Optional[float] = None, 
+    niter_lic:int = 5, 
+    kernel_length:int = 101, 
+    log:bool = False, 
+    cmap = None, 
+    nbin:Optional[int] = None, 
+    density:float = 1.0, 
+    color_arrow:str = "w",
+    cmap_arrow = None, 
+    lightsource:bool = True, 
+    streamlines:bool = False, 
+    alpha_transparency:bool = True,
+    alpha:float = 0.03,
     **kwargs, 
 ):
     Xi, Yi, v1i, v2i, fieldi, licv = lick_box(
@@ -215,16 +208,15 @@ def lick_box_plot(
     # print("pcolormesh")
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.05)
-    cbar = plt.colorbar(im, cax=cax, orientation='vertical')#, format='%.0e')
+    cbar = fig.colorbar(im, cax=cax, orientation='vertical')#, format='%.0e')
     if streamlines:
         strm = ax.streamplot(Xi, Yi, v1i, v2i, density=density, arrowstyle="->", linewidth=0.8, color=color_arrow, cmap=cmap_arrow)
     ax.set_xlim(xmin,xmax)
     ax.set_ylim(ymin,ymax)
     #print("streamplot")
 
-
-def test_lick_box_plot(cmap=None):
-    plt.close("all")
+if __name__ == "__main__":
+    cmap = "inferno"
     fig, ax = plt.subplots()
     x = np.geomspace(0.1,10,100)
     y = np.geomspace(0.1,5,100)
@@ -232,5 +224,5 @@ def test_lick_box_plot(cmap=None):
     v1 = np.cos(a)
     v2 = np.sin(b)
     field = v1**2+v2**2
-    lick_box_plot(ax, x, y, v1, v2, field, cmap=cmap, refinement=5, kernel_length=100, streamlines=True)
+    lick_box_plot(fig, ax, x, y, v1, v2, field, cmap=cmap, refinement=5, kernel_length=100, streamlines=True)
     plt.show()
