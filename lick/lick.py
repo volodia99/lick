@@ -115,7 +115,15 @@ def lick_box(
     kernel_length:int = 101, 
     lightsource:bool = True, 
 ):
-    yy, xx = np.meshgrid(y, x)
+    if ((len(x.shape)==2) and (len(y.shape)==2)):
+        yy = y
+        xx = x
+    elif ((len(x.shape)==1) and (len(y.shape)==1)):
+        yy, xx = np.meshgrid(y, x)
+    else:
+        raise ValueError (
+            f"Uncorrect shapes: for 'x' ({len(x.shape)}d array) and for 'y' ({len(y.shape)}d array). Should be 1d or 2d arrays."
+        )
     xi, yi, v1i, v2i, fieldi = interpol(
             xx,
             yy,
