@@ -39,9 +39,9 @@ v1 = np.cos(a)
 v2 = np.sin(b)
 field = v1 ** 2 + v2 ** 2
 lick_box_plot(
-	fig,
-	ax,
-	x,
+    fig,
+    ax,
+    x,
     y,
     v1,
     v2,
