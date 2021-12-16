@@ -6,7 +6,7 @@ Version: 0.1.0
 Author: Gaylor Wafflard-Fernandez
 Author-email: gaylor.wafflard@univ-grenoble-alpes.fr
 
-![lick](https://github.com/Volodia99/lick/raw/master/imgs/lick.png)
+![lick](https://github.com/Volodia99/lick/raw/main/imgs/lick.png)
 
 ## Installation
 
