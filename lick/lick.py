@@ -86,9 +86,7 @@ def lick(
 
     image = _lic.line_integral_convolution(v1, v2, texture, kernel)
     for _ in range(niter_lic - 1):
-        image = _lic.line_integral_convolution(
-            v1, v2, image, kernel
-        )
+        image = _lic.line_integral_convolution(v1, v2, image, kernel)
 
     image = exposure.equalize_hist(image)
     image /= image.max()
@@ -108,7 +106,7 @@ def lick_box(
     v2: np.ndarray,
     field: np.ndarray,
     *,
-    size_interpolated: Optional[int] = None,
+    size_interpolated: int = 800,
     xmin: Optional[float] = None,
     xmax: Optional[float] = None,
     ymin: Optional[float] = None,
@@ -162,7 +160,7 @@ def lick_box_plot(
     *,
     vmin: Optional[float] = None,
     vmax: Optional[float] = None,
-    size_interpolated: Optional[int] = None,
+    size_interpolated: int = 800,
     xmin: Optional[float] = None,
     xmax: Optional[float] = None,
     ymin: Optional[float] = None,
