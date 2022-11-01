@@ -1,0 +1,112 @@
+name: CI
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  # auto-cancel any in-progress job *on the same branch*
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        python-version:
+        - '3.8'
+        #- '3.9'
+        - '3.10'
+        #- '3.11'
+        #include:
+        #- os: macos-latest
+        #  python-version: '3.11'
+        #- os: windows-latest
+        #  python-version: '3.11'
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Build
+      # installing in editable mode
+      # to workaround an issue with PYTHONPATH
+      # where running pytest via coverage leads
+      # to ModuleNotFoundErrors for extension modules
+      run: python -m pip install --editable ".[test]"
+
+    - run: pytest --color=yes
+
+  image-tests:
+    name: Image tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - uses: actions/checkout@v3
+
+    - name: Build
+      run: python -m pip install ".[test]"
+
+    - name: Run Image Tests
+      run: |
+        pytest --color=yes --mpl -m mpl_image_compare \
+               --mpl-generate-summary=html \
+               --mpl-results-path=lick_pytest_mpl_results \
+               --mpl-baseline-path=tests/pytest_mpl_baseline
+
+    - name: Generate new image baseline
+      if: failure()
+      run: |
+        pytest --color=yes --mpl -m mpl_image_compare \
+               --mpl-generate-path=lick_pytest_mpl_new_baseline \
+               --last-failed
+
+    # always attempt to upload artifacts, even
+    # (and especially) in case of failure.
+    - name: Upload pytest-mpl report
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: lick_pytest_mpl_results
+        path: lick_pytest_mpl_results/*
+
+    - name: Upload pytest-mpl baseline
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: lick_pytest_mpl_new_baseline
+        path: lick_pytest_mpl_new_baseline/*
+        if-no-files-found: ignore
+
+
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: type check
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Build
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install ".[typecheck]"
+
+    - run: mypy lick
