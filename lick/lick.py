@@ -219,11 +219,9 @@ def lick_box_plot(
             vmax=vmax,
             rasterized=True,
         )
-        im.set_edgecolor("face")
-        im2 = ax.pcolormesh(
+        ax.pcolormesh(
             Xi, Yi, licv, cmap="gray", shading="nearest", alpha=alpha, rasterized=True
         )
-        im2.set_edgecolor("face")
     else:
         im = ax.pcolormesh(
             Xi, Yi, datalicv, cmap=cmap, shading="nearest", vmin=vmin, vmax=vmax
