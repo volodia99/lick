@@ -2,8 +2,6 @@
 Algorithm based on "Imaging Vecotr Fields Using Line Integral Convolution"
                    by Brian Cabral and Leith Leedom
 """
-import numpy as np
-
 cimport cython
 cimport numpy as np
 
