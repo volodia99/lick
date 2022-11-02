@@ -121,9 +121,8 @@ def line_integral_convolution(
     """
 
     cdef int i,j,k,x,y
-    cdef int h,w,kernellen
-    cdef int t
-    cdef float fx, fy, tx, ty
+    cdef int kernellen
+    cdef float fx, fy
     cdef float ui, vi, last_ui, last_vi
     cdef np.ndarray[float, ndim=2] result
     cdef int pol
