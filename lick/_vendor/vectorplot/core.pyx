@@ -87,6 +87,8 @@ cdef void _advance(float vx, float vy,
         y[0]=h-1 # FIXME: other boundary conditions?
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def line_integral_convolution(
         np.ndarray[float, ndim=2] u,
         np.ndarray[float, ndim=2] v,
@@ -129,6 +131,11 @@ def line_integral_convolution(
     cdef float ui, vi, last_ui, last_vi
     cdef int pol = polarization
 
+    cdef float[:, :] u_v = u
+    cdef float[:, :] v_v = v
+    cdef float[:, :] texture_v = texture
+    cdef float[:, :] out_v = out
+
     ny = u.shape[0]
     nx = u.shape[1]
 
@@ -145,11 +152,11 @@ def line_integral_convolution(
             last_vi = 0
 
             k = kernellen//2
-            out[i,j] += kernel[k]*texture[y,x]
+            out_v[i,j] += kernel[k]*texture_v[y,x]
 
             while k<kernellen-1:
-                ui = u[y,x]
-                vi = v[y,x]
+                ui = u_v[y,x]
+                vi = v_v[y,x]
                 if pol and (ui*last_ui+vi*last_vi)<0:
                     ui = -ui
                     vi = -vi
@@ -158,7 +165,7 @@ def line_integral_convolution(
                 _advance(ui,vi,
                         &x, &y, &fx, &fy, nx, ny)
                 k+=1
-                out[i,j] += kernel[k]*texture[y,x]
+                out_v[i,j] += kernel[k]*texture_v[y,x]
 
             x = j
             y = i
@@ -170,8 +177,8 @@ def line_integral_convolution(
             k = kernellen//2
 
             while k>0:
-                ui = u[y,x]
-                vi = v[y,x]
+                ui = u_v[y,x]
+                vi = v_v[y,x]
                 if pol and (ui*last_ui+vi*last_vi)<0:
                     ui = -ui
                     vi = -vi
@@ -180,4 +187,4 @@ def line_integral_convolution(
                 _advance(-ui,-vi,
                         &x, &y, &fx, &fy, nx, ny)
                 k-=1
-                out[i,j] += kernel[k]*texture[y,x]
+                out_v[i,j] += kernel[k]*texture_v[y,x]
