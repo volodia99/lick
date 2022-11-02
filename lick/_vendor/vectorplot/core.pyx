@@ -92,6 +92,7 @@ def line_integral_convolution(
         np.ndarray[float, ndim=2] v,
         np.ndarray[float, ndim=2] texture,
         np.ndarray[float, ndim=1] kernel,
+        np.ndarray[float, ndim=2] out,
         int polarization=0):
     """Return an image of the texture array blurred along the local
     vector field orientation.
@@ -126,7 +127,6 @@ def line_integral_convolution(
     cdef int kernellen
     cdef float fx, fy
     cdef float ui, vi, last_ui, last_vi
-    cdef np.ndarray[float, ndim=2] result
     cdef int pol = polarization
 
     ny = u.shape[0]
@@ -134,7 +134,6 @@ def line_integral_convolution(
 
     kernellen = kernel.shape[0]
 
-    result = np.zeros((ny,nx),dtype=np.float32)
 
     for i in range(ny):
         for j in range(nx):
@@ -146,7 +145,7 @@ def line_integral_convolution(
             last_vi = 0
 
             k = kernellen//2
-            result[i,j] += kernel[k]*texture[y,x]
+            out[i,j] += kernel[k]*texture[y,x]
 
             while k<kernellen-1:
                 ui = u[y,x]
@@ -159,7 +158,7 @@ def line_integral_convolution(
                 _advance(ui,vi,
                         &x, &y, &fx, &fy, nx, ny)
                 k+=1
-                result[i,j] += kernel[k]*texture[y,x]
+                out[i,j] += kernel[k]*texture[y,x]
 
             x = j
             y = i
@@ -181,6 +180,4 @@ def line_integral_convolution(
                 _advance(-ui,-vi,
                         &x, &y, &fx, &fy, nx, ny)
                 k-=1
-                result[i,j] += kernel[k]*texture[y,x]
-
-    return result
+                out[i,j] += kernel[k]*texture[y,x]
