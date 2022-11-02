@@ -4,9 +4,11 @@ Algorithm based on "Imaging Vecotr Fields Using Line Integral Convolution"
 """
 import numpy as np
 
+cimport cython
 cimport numpy as np
 
 
+@cython.cdivision
 cdef void _advance(float vx, float vy,
         int* x, int* y, float*fx, float*fy, int w, int h):
     """Move to the next pixel in the vector direction.
@@ -90,7 +92,7 @@ def line_integral_convolution(
         np.ndarray[float, ndim=2] v,
         np.ndarray[float, ndim=2] texture,
         np.ndarray[float, ndim=1] kernel,
-        polarization=False):
+        int polarization=0):
     """Return an image of the texture array blurred along the local
     vector field orientation.
     Parameters
@@ -108,8 +110,8 @@ def line_integral_convolution(
       the stream line. For static images, a box kernel (equal to one)
       of length max(nx,ny)/10 is appropriate. The kernel should be
       symmetric.
-    polarization : boolean
-      If True, treat the vector field as a polarization (so that the
+    polarization : int (0 or 1)
+      If 1, treat the vector field as a polarization (so that the
       vectors have no distinction between forward and backward).
 
     Returns
@@ -125,12 +127,7 @@ def line_integral_convolution(
     cdef float fx, fy
     cdef float ui, vi, last_ui, last_vi
     cdef np.ndarray[float, ndim=2] result
-    cdef int pol
-
-    if polarization:
-        pol = 1
-    else:
-        pol = 0
+    cdef int pol = polarization
 
     ny = u.shape[0]
     nx = u.shape[1]
