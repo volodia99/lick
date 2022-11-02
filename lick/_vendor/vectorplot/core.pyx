@@ -77,15 +77,9 @@ cdef void _advance(float vx, float vy,
             y[0]-=1
             fy[0]=1
         fx[0]+=ty*vx
-    if x[0]>=w:
-        x[0]=w-1 # FIXME: other boundary conditions?
-    if x[0]<0:
-        x[0]=0 # FIXME: other boundary conditions?
-    if y[0]<0:
-        y[0]=0 # FIXME: other boundary conditions?
-    if y[0]>=h:
-        y[0]=h-1 # FIXME: other boundary conditions?
 
+    x[0] = max(0, min(w-1, x[0]))
+    y[0] = max(0, min(h-1, y[0]))
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
