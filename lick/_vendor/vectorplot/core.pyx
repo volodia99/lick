@@ -4,6 +4,7 @@ Algorithm based on "Imaging Vecotr Fields Using Line Integral Convolution"
 """
 cimport cython
 cimport numpy as np
+from libc.math cimport signbit
 
 
 cdef fused real:
@@ -11,7 +12,7 @@ cdef fused real:
     np.float32_t
 
 @cython.cdivision
-cdef void _advance(real vx, real vy,
+cdef inline void _advance(real vx, real vy,
         int* x, int* y, real*fx, real*fy, int w, int h):
     """Move to the next pixel in the vector direction.
 
@@ -37,31 +38,17 @@ cdef void _advance(real vx, real vy,
       Number of pixels along y.
     """
 
-    cdef real tx, ty
-    cdef int zeros
-
-    zeros = 0
+    cdef real tx
+    cdef real ty
 
     # Think of tx (ty) as the time it takes to reach the next pixel
     # along x (y).
 
-    if vx>0:
-        tx = (1-fx[0])/vx
-    elif vx<0:
-        tx = -fx[0]/vx
-    else:
-        zeros += 1
-        tx = 1e100
-    if vy>0:
-        ty = (1-fy[0])/vy
-    elif vy<0:
-        ty = -fy[0]/vy
-    else:
-        zeros += 1
-        ty = 1e100
-
-    if zeros==2:
+    if vx==0 and vy==0:
         return
+
+    tx = (signbit(-vx)-fx[0])/vx
+    ty = (signbit(-vy)-fy[0])/vy
 
     if tx<ty:    # We reached the next pixel along x first.
         if vx>=0:
