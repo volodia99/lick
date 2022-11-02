@@ -178,7 +178,7 @@ def lick_box_plot(
     light_source: bool = True,
     stream_density: float = 0,
     alpha_transparency: bool = True,
-    alpha: float = 0.03,
+    alpha: float = 0.3,
 ):
     Xi, Yi, v1i, v2i, fieldi, licv = lick_box(
         x,
