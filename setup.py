@@ -13,7 +13,7 @@ setup(
                 include_dirs=[numpy.get_include()],
             ),
         ],
-        # compiler_directives={"language_level": 3},
+        compiler_directives={"language_level": 3},
         annotate=True,
     ),
 )
