@@ -47,14 +47,3 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies: [flake8-bugbear]
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 'v0.982'
-    hooks:
-      - id: mypy
-        additional_dependencies: [
-          types-setuptools,
-          types-toml,
-          numpy,
-          matplotlib,
-        ]
