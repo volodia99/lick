@@ -23,6 +23,7 @@ def test_lick_img():
         V2,
         field,
         size_interpolated=256,
+        method="linear",
         xmin=1,
         xmax=9,
         ymin=1,
