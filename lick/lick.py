@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from typing import Optional
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LightSource
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -251,6 +250,8 @@ def lick_box_plot(
 
 
 if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+
     cmap = "inferno"
     fig, ax = plt.subplots()
     x = np.geomspace(0.1, 10, 128)
