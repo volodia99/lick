@@ -4,9 +4,11 @@ Algorithm based on "Imaging Vecotr Fields Using Line Integral Convolution"
 """
 import numpy as np
 
+cimport cython
 cimport numpy as np
 
 
+@cython.cdivision
 cdef void _advance(float vx, float vy,
         int* x, int* y, float*fx, float*fy, int w, int h):
     """Move to the next pixel in the vector direction.
@@ -85,12 +87,15 @@ cdef void _advance(float vx, float vy,
         y[0]=h-1 # FIXME: other boundary conditions?
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def line_integral_convolution(
         np.ndarray[float, ndim=2] u,
         np.ndarray[float, ndim=2] v,
         np.ndarray[float, ndim=2] texture,
         np.ndarray[float, ndim=1] kernel,
-        polarization=False):
+        np.ndarray[float, ndim=2] out,
+        int polarization=0):
     """Return an image of the texture array blurred along the local
     vector field orientation.
     Parameters
@@ -108,8 +113,8 @@ def line_integral_convolution(
       the stream line. For static images, a box kernel (equal to one)
       of length max(nx,ny)/10 is appropriate. The kernel should be
       symmetric.
-    polarization : boolean
-      If True, treat the vector field as a polarization (so that the
+    polarization : int (0 or 1)
+      If 1, treat the vector field as a polarization (so that the
       vectors have no distinction between forward and backward).
 
     Returns
@@ -124,20 +129,18 @@ def line_integral_convolution(
     cdef int kernellen
     cdef float fx, fy
     cdef float ui, vi, last_ui, last_vi
-    cdef np.ndarray[float, ndim=2] result
-    cdef int pol
+    cdef int pol = polarization
 
-    if polarization:
-        pol = 1
-    else:
-        pol = 0
+    cdef float[:, :] u_v = u
+    cdef float[:, :] v_v = v
+    cdef float[:, :] texture_v = texture
+    cdef float[:, :] out_v = out
 
     ny = u.shape[0]
     nx = u.shape[1]
 
     kernellen = kernel.shape[0]
 
-    result = np.zeros((ny,nx),dtype=np.float32)
 
     for i in range(ny):
         for j in range(nx):
@@ -149,11 +152,11 @@ def line_integral_convolution(
             last_vi = 0
 
             k = kernellen//2
-            result[i,j] += kernel[k]*texture[y,x]
+            out_v[i,j] += kernel[k]*texture_v[y,x]
 
             while k<kernellen-1:
-                ui = u[y,x]
-                vi = v[y,x]
+                ui = u_v[y,x]
+                vi = v_v[y,x]
                 if pol and (ui*last_ui+vi*last_vi)<0:
                     ui = -ui
                     vi = -vi
@@ -162,7 +165,7 @@ def line_integral_convolution(
                 _advance(ui,vi,
                         &x, &y, &fx, &fy, nx, ny)
                 k+=1
-                result[i,j] += kernel[k]*texture[y,x]
+                out_v[i,j] += kernel[k]*texture_v[y,x]
 
             x = j
             y = i
@@ -174,8 +177,8 @@ def line_integral_convolution(
             k = kernellen//2
 
             while k>0:
-                ui = u[y,x]
-                vi = v[y,x]
+                ui = u_v[y,x]
+                vi = v_v[y,x]
                 if pol and (ui*last_ui+vi*last_vi)<0:
                     ui = -ui
                     vi = -vi
@@ -184,6 +187,4 @@ def line_integral_convolution(
                 _advance(-ui,-vi,
                         &x, &y, &fx, &fy, nx, ny)
                 k-=1
-                result[i,j] += kernel[k]*texture[y,x]
-
-    return result
+                out_v[i,j] += kernel[k]*texture_v[y,x]

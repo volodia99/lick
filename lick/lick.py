@@ -85,9 +85,12 @@ def lick(
     ).astype("float32")
     kernel = np.sin(np.arange(kernel_length, dtype="float32") * np.pi / kernel_length)
 
-    image = _lic.line_integral_convolution(v1, v2, texture, kernel)
-    for _ in range(niter_lic - 1):
-        image = _lic.line_integral_convolution(v1, v2, image, kernel)
+    out = np.empty_like(v1, dtype=np.float32)
+    image = texture
+    for _ in range(niter_lic):
+        out[:, :] = 0.0
+        _lic.line_integral_convolution(v1, v2, image, kernel, out=out)
+        image[:, :] = out[:, :]
 
     image = exposure.equalize_hist(image)
     image /= image.max()
