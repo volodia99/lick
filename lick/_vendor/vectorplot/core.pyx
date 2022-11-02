@@ -6,26 +6,30 @@ cimport cython
 cimport numpy as np
 
 
+cdef fused real:
+    np.float64_t
+    np.float32_t
+
 @cython.cdivision
-cdef void _advance(float vx, float vy,
-        int* x, int* y, float*fx, float*fy, int w, int h):
+cdef void _advance(real vx, real vy,
+        int* x, int* y, real*fx, real*fy, int w, int h):
     """Move to the next pixel in the vector direction.
 
     This function updates x, y, fx, and fy in place.
 
     Parameters
     ----------
-    vx : float
+    vx : real
       Vector x component.
-    vy :float
+    vy :real
       Vector y component.
     x : int
       Pixel x index. Updated in place.
     y : int
       Pixel y index. Updated in place.
-    fx : float
+    fx : real
       Position along x in the pixel unit square. Updated in place.
-    fy : float
+    fy : real
       Position along y in the pixel unit square. Updated in place.
     w : int
       Number of pixels along x.
@@ -33,7 +37,7 @@ cdef void _advance(float vx, float vy,
       Number of pixels along y.
     """
 
-    cdef float tx, ty
+    cdef real tx, ty
     cdef int zeros
 
     zeros = 0
@@ -82,11 +86,11 @@ cdef void _advance(float vx, float vy,
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def line_integral_convolution(
-        np.ndarray[float, ndim=2] u,
-        np.ndarray[float, ndim=2] v,
-        np.ndarray[float, ndim=2] texture,
-        np.ndarray[float, ndim=1] kernel,
-        np.ndarray[float, ndim=2] out,
+        np.ndarray[real, ndim=2] u,
+        np.ndarray[real, ndim=2] v,
+        np.ndarray[real, ndim=2] texture,
+        np.ndarray[real, ndim=1] kernel,
+        np.ndarray[real, ndim=2] out,
         int polarization=0):
     """Return an image of the texture array blurred along the local
     vector field orientation.
@@ -105,6 +109,9 @@ def line_integral_convolution(
       the stream line. For static images, a box kernel (equal to one)
       of length max(nx,ny)/10 is appropriate. The kernel should be
       symmetric.
+
+    out : 2D array
+      The result array. Initial state should be all zeros
     polarization : int (0 or 1)
       If 1, treat the vector field as a polarization (so that the
       vectors have no distinction between forward and backward).
@@ -119,14 +126,14 @@ def line_integral_convolution(
 
     cdef int i,j,k,x,y
     cdef int kernellen
-    cdef float fx, fy
-    cdef float ui, vi, last_ui, last_vi
+    cdef real fx, fy
+    cdef real ui, vi, last_ui, last_vi
     cdef int pol = polarization
 
-    cdef float[:, :] u_v = u
-    cdef float[:, :] v_v = v
-    cdef float[:, :] texture_v = texture
-    cdef float[:, :] out_v = out
+    cdef real[:, :] u_v = u
+    cdef real[:, :] v_v = v
+    cdef real[:, :] texture_v = texture
+    cdef real[:, :] out_v = out
 
     ny = u.shape[0]
     nx = u.shape[1]

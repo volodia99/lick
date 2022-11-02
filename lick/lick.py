@@ -74,18 +74,17 @@ def lick(
         raise ValueError(f"Expected a 2D array for v1, got v1 with shape {v1.shape}")
     if v2.ndim != 2:
         raise ValueError(f"Expected a 2D array for v2, got v2 with shape {v2.shape}")
-    v1 = v1.astype("float32")
-    v2 = v2.astype("float32")
+
     texture = random_noise(
         np.zeros_like(v1),
         mode="gaussian",
         mean=0.5,
         var=0.001,
         seed=0,
-    ).astype("float32")
-    kernel = np.sin(np.arange(kernel_length, dtype="float32") * np.pi / kernel_length)
+    ).astype(v1.dtype)
+    kernel = np.sin(np.arange(kernel_length, dtype=v1.dtype) * np.pi / kernel_length)
 
-    out = np.empty_like(v1, dtype=np.float32)
+    out = np.empty_like(v1)
     image = texture
     for _ in range(niter_lic):
         out[:, :] = 0.0
