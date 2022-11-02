@@ -177,7 +177,7 @@ def lick_box_plot(
     light_source: bool = True,
     stream_density: float = 0,
     alpha_transparency: bool = True,
-    alpha: float = 0.03,
+    alpha: float = 0.3,
 ):
     Xi, Yi, v1i, v2i, fieldi, licv = lick_box(
         x,
@@ -218,11 +218,9 @@ def lick_box_plot(
             vmax=vmax,
             rasterized=True,
         )
-        im.set_edgecolor("face")
-        im2 = ax.pcolormesh(
+        ax.pcolormesh(
             Xi, Yi, licv, cmap="gray", shading="nearest", alpha=alpha, rasterized=True
         )
-        im2.set_edgecolor("face")
     else:
         im = ax.pcolormesh(
             Xi, Yi, datalicv, cmap=cmap, shading="nearest", vmin=vmin, vmax=vmax
