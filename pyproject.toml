@@ -1,10 +1,54 @@
 [build-system]
 requires = [
-	"setuptools",
-	"wheel",
+	"setuptools>=61.2",
 	"Cython>=0.29.22",
 	"oldest-supported-numpy",
 ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lick"
+version = "0.2.0"
+description = "Package that uses a Line Integral Convolution library to clothe a 2D field (ex: density field) with a LIC texture, given two vector fields (ex: velocity (vx, vy))"
+authors = [
+    { name = "G. Wafflard-Fernandez" },
+	{ name = "C.M.T. Robert" },
+]
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "cblind",
+    "matplotlib>=3.4.0",
+    "numpy",
+    "scikit-image>=0.18.1",
+    "scipy",
+]
+
+[project.license]
+text = "GPL-3.0"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=6.1",
+    "pytest-mpl>=0.16.1",
+]
+typecheck = [
+    "mypy==0.982",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.scripts]
+lick = "lick.lick:lick"
+
+[project.urls]
+Homepage = "https://github.com/volodia99/lick"
 
 [tool.black]
 line-length = 88
@@ -12,7 +56,6 @@ line-length = 88
 [tool.isort]
 profile = "black"
 combine_as_imports = true
-
 
 [tool.mypy]
 python_version = "3.8"
@@ -22,6 +65,12 @@ pretty = true
 warn_return_any = true
 warn_unused_configs = true
 warn_unreachable = true
-#disallow_untyped_defs = true
-#disallow_incomplete_defs = true
-#follow_imports = "silent"
+
+[tool.setuptools]
+license-files = [
+    "LICENSE",
+]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+namespaces = false

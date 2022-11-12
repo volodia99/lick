@@ -2,8 +2,9 @@
 [![PyPI](https://img.shields.io/pypi/v/lick)](https://pypi.org/project/lick/)
 
 Line Integral Convolution Knit : Package that uses a Line Integral Convolution library to clothe a 2D field (ex: density field) with a LIC texture, given two vector fields (ex: velocity (vx, vy)).
-Version: 0.1.0
+
 Author: Gaylor Wafflard-Fernandez
+
 Author-email: gaylor.wafflard@univ-grenoble-alpes.fr
 
 <p align="center">
