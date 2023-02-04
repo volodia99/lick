@@ -32,15 +32,6 @@ dependencies = [
 [project.license]
 text = "GPL-3.0"
 
-[project.optional-dependencies]
-test = [
-    "pytest>=6.1",
-    "pytest-mpl>=0.16.1",
-]
-typecheck = [
-    "mypy==0.982",
-]
-
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
