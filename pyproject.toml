@@ -42,7 +42,6 @@ lick = "lick.lick:lick"
 Homepage = "https://github.com/volodia99/lick"
 
 [tool.ruff]
-target-version = "py38" # https://github.com/charliermarsh/ruff/issues/2039
 exclude = ["*__init__.py"]
 ignore = ["E501"]
 select = [
