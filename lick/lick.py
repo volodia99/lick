@@ -2,11 +2,6 @@
 from typing import Optional
 
 import numpy as np
-from matplotlib.colors import LightSource
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from scipy.interpolate import griddata
-from skimage import exposure
-from skimage.util import random_noise
 
 import lick._vendor.vectorplot.core as _lic
 
@@ -25,6 +20,8 @@ def interpol(
     ymax: Optional[float] = None,
     size_interpolated: int = 800,
 ):
+    from scipy.interpolate import griddata
+
     if xmin is None:
         xmin = xx.min()
     if xmax is None:
@@ -69,6 +66,9 @@ def lick(
     kernel_length: int = 101,
     light_source: bool = True,
 ):
+    from skimage import exposure
+    from skimage.util import random_noise
+
     if v1.ndim != 2:
         raise ValueError(f"Expected a 2D array for v1, got v1 with shape {v1.shape}")
     if v2.ndim != 2:
@@ -94,6 +94,8 @@ def lick(
     image /= image.max()
 
     if light_source:
+        from matplotlib.colors import LightSource
+
         # Illuminate the scene from the northwest
         ls = LightSource(azdeg=0, altdeg=45)
         image = ls.hillshade(image, vert_exag=5)
@@ -182,6 +184,8 @@ def lick_box_plot(
     alpha_transparency: bool = True,
     alpha: float = 0.3,
 ):
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+
     Xi, Yi, v1i, v2i, fieldi, licv = lick_box(
         x,
         y,
