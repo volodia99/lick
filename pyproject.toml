@@ -26,6 +26,7 @@ dependencies = [
     "numpy",
     "scikit-image>=0.18.1",
     "scipy",
+    "packaging>=20.9",
 ]
 
 [project.license]
