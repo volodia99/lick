@@ -26,6 +26,7 @@ dependencies = [
     "numpy",
     "scikit-image>=0.18.1",
     "scipy",
+    "packaging>=20.9",
 ]
 
 [project.license]
@@ -67,6 +68,9 @@ pretty = true
 warn_return_any = true
 warn_unused_configs = true
 warn_unreachable = true
+
+[tool.pytest.ini_options]
+filterwarnings = ["error"]
 
 [tool.setuptools]
 license-files = [
