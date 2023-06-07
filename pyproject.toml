@@ -57,6 +57,7 @@ select = [
 
 [tool.ruff.isort]
 combine-as-imports = true
+known-first-party = ["lick"]
 
 [tool.mypy]
 python_version = "3.8"
@@ -74,4 +75,5 @@ license-files = [
 include-package-data = false
 
 [tool.setuptools.packages.find]
+where = ["src"]
 namespaces = false
