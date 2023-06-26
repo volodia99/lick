@@ -8,7 +8,7 @@
 
 Line Integral Convolution Knit : Package that uses a Line Integral Convolution library to clothe a 2D field (ex: density field) with a LIC texture, given two vector fields (ex: velocity (vx, vy)).
 
-Author: Gaylor Wafflard-Fernandez
+Authors: Gaylor Wafflard-Fernandez, Clément Robert
 
 Author-email: gaylor.wafflard@univ-grenoble-alpes.fr
 
