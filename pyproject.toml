@@ -23,7 +23,8 @@ classifiers = [
 requires-python = ">=3.8"
 dependencies = [
     "matplotlib>=3.4.0",
-    "numpy",
+    # https://github.com/scipy/oldest-supported-numpy/issues/76#issuecomment-1628865694
+    "numpy<2.0",
     "scikit-image>=0.18.1",
     "scipy",
     "packaging>=20.9",
