@@ -1,0 +1,2 @@
+include src/lick/_vendor/vectorplot/core.pyx
+exclude src/lick/_vendor/vectorplot/*.c
