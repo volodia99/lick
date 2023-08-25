@@ -19,17 +19,16 @@ authors = [
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "matplotlib>=3.4.0",
     # keep in sync with NPY_TARGET_VERSION (setup.py)
     # https://github.com/scipy/oldest-supported-numpy/issues/76#issuecomment-1628865694
-    "numpy>=1.18,<2.0",
+    "numpy>=1.19.3,<2.0",
     "scikit-image>=0.18.1",
-    "scipy",
+    "scipy>=1.5.4",
     "packaging>=20.9",
 ]
 
@@ -65,7 +64,7 @@ combine-as-imports = true
 known-first-party = ["lick"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 ignore_missing_imports = true # matplotlib and skimage don't have stubs yet
 show_error_codes = true
 pretty = true
