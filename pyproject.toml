@@ -71,7 +71,10 @@ warn_unused_configs = true
 warn_unreachable = true
 
 [tool.pytest.ini_options]
-filterwarnings = ["error"]
+filterwarnings = [
+    "error",
+    'ignore:datetime\.datetime\.utcfromtimestamp\(\) is deprecated:DeprecationWarning', # https://github.com/dateutil/dateutil/pull/1285
+]
 
 [tool.setuptools]
 license-files = [

@@ -29,15 +29,16 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: 3.12-dev
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install --upgrade setuptools wheel
-        python -m pip install --upgrade --pre --extra-index \
-           https://pypi.anaconda.org/scientific-python-nightly-wheels/simple \
-           numpy matplotlib scipy scikit-image
+        python -m pip install setuptools wheel
+        python -m pip install --pre --only-binary ":all:" \
+          numpy matplotlib scipy scikit-image \
+          --extra-index \
+          https://pypi.anaconda.org/scientific-python-nightly-wheels/simple
 
         python -m pip install --pre Cython
 

@@ -17,7 +17,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - run: |
         python -m pip install --upgrade pip
         python -m pip install --upgrade check-manifest
@@ -36,11 +36,12 @@ jobs:
         - '3.9'
         - '3.10'
         - '3.11'
+        - '3.12'
         include:
         - os: macos-latest
-          python-version: '3.11'
+          python-version: '3.12'
         - os: windows-latest
-          python-version: '3.11'
+          python-version: '3.12'
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -70,7 +71,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
 
     - uses: actions/checkout@v4
 
