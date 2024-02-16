@@ -8,6 +8,6 @@ authors:
   given-names: "Clément"
   orcid: "https://orcid.org/0000-0001-8629-7068"
 title: "lick"
-version: 0.4.1
+version: 0.5.0
 date-released: 2023-07-05
 url: "https://github.com/volodia99/lick"
