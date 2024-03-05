@@ -43,7 +43,7 @@ lick = "lick.lick:lick"
 [project.urls]
 Homepage = "https://github.com/volodia99/lick"
 
-[tool.ruff]
+[tool.ruff.lint]
 exclude = ["*__init__.py"]
 ignore = ["E501"]
 select = [
@@ -57,7 +57,7 @@ select = [
     "UP",  # pyupgrade
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 combine-as-imports = true
 known-first-party = ["lick"]
 
