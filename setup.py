@@ -6,7 +6,8 @@ from setuptools import setup
 
 define_macros = [
     ("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION"),
-    ("NPY_TARGET_VERSION", "NPY_1_18_API_VERSION"),
+    # keep in sync with minimal requirement (pyproject.toml)
+    ("NPY_TARGET_VERSION", "NPY_1_19_API_VERSION"),
 ]
 
 setup(
