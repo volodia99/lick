@@ -6,6 +6,44 @@ import numpy as np
 import lick._vendor.vectorplot.core as _lic
 
 
+def _equalize_hist(image):
+    # adapted from scikit-image
+    """Return image after histogram equalization.
+
+    Parameters
+    ----------
+    image : array
+        Image array.
+
+    Returns
+    -------
+    out : float array
+        Image array after histogram equalization.
+
+    Notes
+    -----
+    This function is adapted from [1]_ with the author's permission.
+
+    References
+    ----------
+    .. [1] http://www.janeriksolem.net/histogram-equalization-with-python-and.html
+    .. [2] https://en.wikipedia.org/wiki/Histogram_equalization
+
+    """
+    hist, bin_edges = np.histogram(image.flatten(), bins=256, range=None)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2.0
+
+    cdf = hist.cumsum()
+    cdf = cdf / float(cdf[-1])
+
+    cdf = cdf.astype(image.dtype, copy=False)
+    out = np.interp(image.flat, bin_centers, cdf)
+    out = out.reshape(image.shape)
+    # Unfortunately, np.interp currently always promotes to float64, so we
+    # have to cast back to single precision when float32 output is desired
+    return out.astype(image.dtype, copy=False)
+
+
 def interpol(
     xx,
     yy,
@@ -67,8 +105,6 @@ def lick(
     kernel_length: int = 101,
     light_source: bool = True,
 ):
-    from skimage import exposure
-
     if v1.ndim != 2:
         raise ValueError(f"Expected a 2D array for v1, got v1 with shape {v1.shape}")
     if v2.ndim != 2:
@@ -85,7 +121,7 @@ def lick(
         _lic.line_integral_convolution(v1, v2, image, kernel, out=out)
         image[:, :] = out[:, :]
 
-    image = exposure.equalize_hist(image)
+    image = _equalize_hist(image)
     image /= image.max()
 
     if light_source:

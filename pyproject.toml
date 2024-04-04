@@ -24,7 +24,6 @@ dependencies = [
     "matplotlib>=3.4.0",
     # keep in sync with NPY_TARGET_VERSION (setup.py)
     "numpy>=1.19.3, <3",
-    "scikit-image>=0.18.1",
     "scipy>=1.5.4",
     "packaging>=20.9",
 ]
