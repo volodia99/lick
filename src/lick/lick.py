@@ -1,9 +1,13 @@
 #!/usr/bin/env python
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
 import lick._vendor.vectorplot.core as _lic
+
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 
 def _equalize_hist(image):
@@ -189,8 +193,8 @@ def lick_box(
 
 
 def lick_box_plot(
-    fig,
-    ax,
+    fig: "Figure",
+    ax: "Axes",
     x: np.ndarray,
     y: np.ndarray,
     v1: np.ndarray,
