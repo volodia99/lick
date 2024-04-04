@@ -90,9 +90,10 @@ jobs:
         python -m pip install .
         python -m pip install --requirement requirements/tests.txt
 
+    - run: python -m pip list
+
     - name: Run Image Tests
       run: |
-        python -m pip freeze
         pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-summary=html \
                --mpl-results-path=lick_pytest_mpl_results \
@@ -142,5 +143,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install .
         python -m pip install --requirement requirements/typecheck.txt
+
+    - run: python -m pip list
 
     - run: mypy src/lick
