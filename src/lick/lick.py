@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-from importlib.metadata import version
 from typing import Optional
 
 import numpy as np
-from packaging.version import Version
 
 import lick._vendor.vectorplot.core as _lic
 
@@ -70,27 +68,14 @@ def lick(
     light_source: bool = True,
 ):
     from skimage import exposure
-    from skimage.util import random_noise
 
     if v1.ndim != 2:
         raise ValueError(f"Expected a 2D array for v1, got v1 with shape {v1.shape}")
     if v2.ndim != 2:
         raise ValueError(f"Expected a 2D array for v2, got v2 with shape {v2.shape}")
 
-    if Version(version("scikit-image")) >= Version("0.21.0"):
-        # avoid deprecated API as soon as the new one is available
-        kwargs = {"rng": 0}
-    else:
-        # backward compatibility branch
-        kwargs = {"seed": 0}
-
-    texture = random_noise(
-        np.zeros_like(v1),
-        mode="gaussian",
-        mean=0.5,
-        var=0.001,
-        **kwargs,
-    ).astype(v1.dtype)
+    rng = np.random.default_rng(seed=0)
+    texture = rng.normal(0.5, 0.001**0.5, v1.shape).astype(v1.dtype, copy=False)
     kernel = np.sin(np.arange(kernel_length, dtype=v1.dtype) * np.pi / kernel_length)
 
     out = np.empty_like(v1)
