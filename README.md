@@ -29,7 +29,7 @@ To import lick:
 import lick as lk
 ```
 
-The important functions are ```lick_box``` and ```lick_box_plot```. While ```lick_box``` interpolates the data and perform a line integral convolution, ```lick_box_plot``` directly plots the final image. Use ```lick_box``` if you want to have more control of the plots you want to do with the lic. Use ```lick_box_plot``` if you want to take advantage of the fine-tuning of the pcolormesh parameters.
+The important functions are `lick_box` and `lick_box_plot`. While `lick_box` interpolates the data and perform a line integral convolution, `lick_box_plot` directly plots the final image. Use `lick_box` if you want to have more control of the plots you want to do with the lic. Use `lick_box_plot` if you want to take advantage of the fine-tuning of the pcolormesh parameters.
 
 ## Example
 
