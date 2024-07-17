@@ -41,7 +41,8 @@ jobs:
         uv pip install setuptools wheel
         uv pip install --pre --no-build numpy matplotlib scipy \
           --extra-index-url \
-          https://pypi.anaconda.org/scientific-python-nightly-wheels/simple
+          https://pypi.anaconda.org/scientific-python-nightly-wheels/simple \
+          --index-strategy unsafe-best-match
         uv pip install --pre Cython
 
     - name: Build
