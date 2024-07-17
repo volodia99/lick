@@ -38,13 +38,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv pip install --upgrade pip
         uv pip install setuptools wheel
-        uv pip install --pre --only-binary ":all:" \
-          numpy matplotlib scipy \
+        uv pip install --pre --no-build numpy matplotlib scipy \
           --extra-index-url \
           https://pypi.anaconda.org/scientific-python-nightly-wheels/simple
-
         uv pip install --pre Cython
 
     - name: Build
