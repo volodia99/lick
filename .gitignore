@@ -1,0 +1,15 @@
+__pycache__
+.python-version
+.coverage*
+.mypy_cache
+.pytest_cache
+
+*~
+*.egg-info
+
+MANIFEST
+build
+dist
+src/lick/_vendor/vectorplot/core.html
+src/lick/_vendor/vectorplot/core*.so
+src/lick/_vendor/vectorplot/core.c
