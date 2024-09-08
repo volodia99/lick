@@ -25,10 +25,11 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - uses: yezz123/setup-uv@v4
+    - uses: astral-sh/setup-uv@v2
       with:
-        uv-version: 0.2.18
-        uv-venv: .venv
+        enable-cache: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Build wheels for CPython
       uses: pypa/cibuildwheel@v2.20.0
       with:

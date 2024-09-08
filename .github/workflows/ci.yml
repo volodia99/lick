@@ -14,22 +14,12 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@v4
-    - name: Setup Python
-      uses: actions/setup-python@v5
+    - uses: astral-sh/setup-uv@v2
       with:
-        python-version: '3.12'
-    - uses: yezz123/setup-uv@v4
-      with:
-        uv-version: 0.2.18
-        uv-venv: .venv
-    - run: |
-        uv pip install --upgrade pip
-        uv pip install --upgrade check-manifest
-        uv pip install --upgrade build
-    - name: Check build
-      run: |
-        python -m check_manifest
-        python -m build
+        enable-cache: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: uvx check-manifest
+    - run: uv build
 
   unit-tests:
     strategy:
@@ -48,34 +38,28 @@ jobs:
           python-version: '3.12'
         - os: ubuntu-20.04
           python-version: '3.9'
-          deps: minimal
+          install-args: --resolution=lowest-direct
 
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout Source
       uses: actions/checkout@v4
-    - name: Setup Python
-      uses: actions/setup-python@v5
+    - uses: astral-sh/setup-uv@v2
       with:
-        python-version: ${{ matrix.python-version }}
-    - uses: yezz123/setup-uv@v4
-      with:
-        uv-version: 0.2.18
-        uv-venv: .venv
-
-    - if: matrix.deps == 'minimal'
-      run: |
-        uv pip compile pyproject.toml --resolution=lowest-direct | uv pip install -r -
+        enable-cache: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build
       run: |
-        uv pip install .
+        uv venv --python ${{ matrix.python-version }}
+        uv pip install . --no-deps
+        uv pip compile pyproject.toml --no-build ${{ matrix.install-args }} | uv pip install -r -
         uv pip install --requirement requirements/tests.txt
 
     - run: uv pip list
 
     - name: Test
-      run: pytest --color=yes
+      run: uv run pytest --color=yes -ra
 
   image-tests:
     name: Image tests
@@ -83,25 +67,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: astral-sh/setup-uv@v2
       with:
-        python-version: '3.12'
-    - uses: yezz123/setup-uv@v4
-      with:
-        uv-version: 0.2.18
-        uv-venv: .venv
+        enable-cache: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       run: |
-        uv pip install --upgrade pip
-        uv pip install .
+        uv venv --python 3.12
+        uv sync
         uv pip install --requirement requirements/tests.txt
 
     - run: uv pip list
 
     - name: Run Image Tests
       run: |
-        pytest --color=yes --mpl -m mpl_image_compare \
+        uv run pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-summary=html \
                --mpl-results-path=lick_pytest_mpl_results \
                --mpl-baseline-path=tests/pytest_mpl_baseline
@@ -109,7 +89,7 @@ jobs:
     - name: Generate new image baseline
       if: failure()
       run: |
-        pytest --color=yes --mpl -m mpl_image_compare \
+        uv run pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-path=lick_pytest_mpl_new_baseline \
                --last-failed
 
@@ -140,21 +120,17 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: astral-sh/setup-uv@v2
       with:
-        python-version: '3.9'
+        enable-cache: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - uses: yezz123/setup-uv@v4
-      with:
-        uv-version: 0.2.18
-        uv-venv: .venv
     - name: Build
       run: |
-        uv pip install --upgrade pip
-        uv pip install .
+        uv venv --python 3.9
+        uv sync
         uv pip install --requirement requirements/typecheck.txt
 
     - run: uv pip list
 
-    - run: mypy src/lick
+    - run: uv run mypy src/lick
