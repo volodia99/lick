@@ -28,7 +28,6 @@ jobs:
     - uses: astral-sh/setup-uv@v2
       with:
         enable-cache: true
-        github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build wheels for CPython
       uses: pypa/cibuildwheel@v2.20.0
