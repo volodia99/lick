@@ -24,13 +24,9 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
-
-    - uses: astral-sh/setup-uv@v2
-      with:
-        enable-cache: true
-
+    - uses: astral-sh/setup-uv@v3
     - name: Build wheels for CPython
-      uses: pypa/cibuildwheel@v2.20.0
+      uses: pypa/cibuildwheel@v2.21.1
       with:
         output-dir: dist
 
@@ -78,7 +74,7 @@ jobs:
         merge-multiple: true
 
     - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@v1.10.0
+      uses: pypa/gh-action-pypi-publish@v1.10.2
       with:
         user: __token__
         password: ${{ secrets.pypi_token }}

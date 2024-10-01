@@ -14,9 +14,7 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@v4
-    - uses: astral-sh/setup-uv@v2
-      with:
-        enable-cache: true
+    - uses: astral-sh/setup-uv@v3
     - run: uvx check-manifest
     - run: uv build
 
@@ -43,9 +41,12 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@v4
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
+        cache-dependency-glob: |
+          **/requirements/tests.txt
+          **/pyproject.toml
 
     - name: Build
       run: |
@@ -65,9 +66,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
+        cache-dependency-glob: |
+          **/requirements/tests.txt
+          **/pyproject.toml
+
     - name: Build
       run: |
         uv venv --python 3.12
@@ -117,9 +122,12 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
+        cache-dependency-glob: |
+          **/requirements/typecheck.txt
+          **/pyproject.toml
 
     - name: Build
       run: |
