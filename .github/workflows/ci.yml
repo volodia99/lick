@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@v4
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
     - run: uvx check-manifest
@@ -43,7 +43,7 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@v4
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
 
@@ -65,7 +65,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
     - name: Build
@@ -117,7 +117,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
 
