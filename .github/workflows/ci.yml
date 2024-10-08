@@ -28,13 +28,18 @@ jobs:
         - '3.10'
         - '3.11'
         - '3.12'
+        - '3.13'
+        venv-loc: [bin]
         include:
         - os: macos-latest
-          python-version: '3.12'
+          python-version: '3.13'
+          venv-loc: bin
         - os: windows-latest
-          python-version: '3.12'
+          python-version: '3.13'
+          venv-loc: Scripts
         - os: ubuntu-20.04
           python-version: '3.9'
+          venv-loc: bin
           install-args: --resolution=lowest-direct
 
     runs-on: ${{ matrix.os }}
@@ -58,7 +63,12 @@ jobs:
     - run: uv pip list
 
     - name: Test
-      run: uv run pytest --color=yes -ra
+      shell: bash
+      # in principle this could be done with uv run pytest, but resolution
+      # appears buggy as of uv 0.4.20 and causes crashes
+      run: |
+        source .venv/${{matrix.venv-loc}}/activate
+        pytest --color=yes -ra
 
   image-tests:
     name: Image tests
