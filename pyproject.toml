@@ -25,7 +25,6 @@ dependencies = [
     # keep in sync with NPY_TARGET_VERSION (setup.py)
     "numpy>=1.19.3, <3",
     "scipy>=1.5.4",
-    "packaging>=20.9",
 ]
 
 [project.license]
