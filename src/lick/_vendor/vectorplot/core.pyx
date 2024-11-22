@@ -13,7 +13,7 @@ cdef fused real:
 
 @cython.cdivision
 cdef inline void _advance(real vx, real vy,
-        int* x, int* y, real*fx, real*fy, int w, int h):
+        int* x, int* y, real*fx, real*fy, int w, int h) noexcept:
     """Move to the next pixel in the vector direction.
 
     This function updates x, y, fx, and fy in place.
