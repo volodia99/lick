@@ -35,7 +35,7 @@ def _equalize_hist(image):
     .. [2] https://en.wikipedia.org/wiki/Histogram_equalization
 
     """
-    hist, bin_edges = np.histogram(image.flatten(), bins=256, range=None)
+    hist, bin_edges = np.histogram(image.ravel(), bins=256, range=None)
     bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2.0
 
     cdf = hist.cumsum()
@@ -89,11 +89,11 @@ def interpol(
 
     # then, interpolate your data onto this grid:
 
-    px = xx.flatten()
-    py = yy.flatten()
-    pv1 = v1.flatten()
-    pv2 = v2.flatten()
-    pfield = field.flatten()
+    px = xx.ravel()
+    py = yy.ravel()
+    pv1 = v1.ravel()
+    pv2 = v2.ravel()
+    pfield = field.ravel()
 
     gv1 = griddata((px, py), pv1, (xi, yi), method=method)
     gv2 = griddata((px, py), pv2, (xi, yi), method=method)
