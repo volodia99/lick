@@ -36,19 +36,22 @@ jobs:
 
     - uses: astral-sh/setup-uv@887a942a15af3a7626099df99e897a18d9e5ab3a # v5.1.0
       with:
-        enable-cache: true
         cache-dependency-glob: |
           **/requirements/tests.txt
           **/pyproject.toml
 
+    - name: Configure uv
+      run: |
+        echo "UV_PYTHON_PREFERENCE=only-system" >> $GITHUB_ENV
+        echo "UV_PYTHON=3.13" >> $GITHUB_ENV
+        echo "UV_PRERELEASE=allow" >> $GITHUB_ENV
+        echo "UV_EXTRA_INDEX_URL=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple" >> $GITHUB_ENV
+        echo "UV_INDEX_STRATEGY=unsafe-best-match" >> $GITHUB_ENV
+
     - name: Install dependencies
       run: |
         uv venv
-        uv pip install setuptools wheel
-        uv pip install --pre --no-build numpy matplotlib scipy Cython \
-          --extra-index-url \
-          https://pypi.anaconda.org/scientific-python-nightly-wheels/simple \
-          --index-strategy unsafe-best-match
+        uv pip install --no-build setuptools wheel numpy matplotlib scipy Cython
 
     - name: Build
       run: |

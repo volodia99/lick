@@ -29,17 +29,13 @@ jobs:
         - '3.11'
         - '3.12'
         - '3.13'
-        venv-loc: [bin]
         include:
         - os: macos-latest
           python-version: '3.13'
-          venv-loc: bin
         - os: windows-latest
           python-version: '3.13'
-          venv-loc: Scripts
         - os: ubuntu-20.04
           python-version: '3.9'
-          venv-loc: bin
           install-args: --resolution=lowest-direct
 
     runs-on: ${{ matrix.os }}
@@ -48,14 +44,13 @@ jobs:
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     - uses: astral-sh/setup-uv@887a942a15af3a7626099df99e897a18d9e5ab3a # v5.1.0
       with:
-        enable-cache: true
+        python-version: ${{ matrix.python-version }}
         cache-dependency-glob: |
           **/requirements/tests.txt
           **/pyproject.toml
 
     - name: Build
       run: |
-        uv venv --python ${{ matrix.python-version }}
         uv pip install . --no-deps
         uv pip compile pyproject.toml --no-build ${{ matrix.install-args }} | uv pip install -r -
         uv pip install --requirement requirements/tests.txt
@@ -67,7 +62,6 @@ jobs:
       # in principle this could be done with uv run pytest, but resolution
       # appears buggy as of uv 0.4.20 and causes crashes
       run: |
-        source .venv/${{matrix.venv-loc}}/activate
         pytest --color=yes -ra
 
   image-tests:
@@ -78,14 +72,13 @@ jobs:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     - uses: astral-sh/setup-uv@887a942a15af3a7626099df99e897a18d9e5ab3a # v5.1.0
       with:
-        enable-cache: true
+        python-version: '3.12'
         cache-dependency-glob: |
           **/requirements/tests.txt
           **/pyproject.toml
 
     - name: Build
       run: |
-        uv venv --python 3.12
         uv sync
         uv pip install --requirement requirements/tests.txt
 
@@ -134,14 +127,13 @@ jobs:
 
     - uses: astral-sh/setup-uv@887a942a15af3a7626099df99e897a18d9e5ab3a # v5.1.0
       with:
-        enable-cache: true
+        python-version: '3.9'
         cache-dependency-glob: |
           **/requirements/typecheck.txt
           **/pyproject.toml
 
     - name: Build
       run: |
-        uv venv --python 3.9
         uv sync
         uv pip install --requirement requirements/typecheck.txt
 
