@@ -34,9 +34,6 @@ text = "GPL-3.0"
 file = "README.md"
 content-type = "text/markdown"
 
-[project.scripts]
-lick = "lick.lick:lick"
-
 [project.urls]
 Homepage = "https://github.com/volodia99/lick"
 
