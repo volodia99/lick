@@ -44,24 +44,13 @@ jobs:
     - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
       with:
         python-version: ${{ matrix.python-version }}
-        cache-dependency-glob: |
-          **/requirements/tests.txt
-          **/pyproject.toml
 
     - name: Build
-      run: |
-        uv pip install . --no-deps
-        uv pip compile pyproject.toml --no-build ${{ matrix.install-args }} | uv pip install -r -
-        uv pip install --requirement requirements/tests.txt
-
-    - run: uv pip list
+      run: uv sync --no-editable --group test ${{ matrix.install-args }}
 
     - name: Test
       shell: bash
-      # in principle this could be done with uv run pytest, but resolution
-      # appears buggy as of uv 0.4.20 and causes crashes
-      run: |
-        pytest --color=yes -ra
+      run: pytest --color=yes -ra
 
   image-tests:
     name: Image tests
@@ -72,20 +61,14 @@ jobs:
     - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
       with:
         python-version: '3.12'
-        cache-dependency-glob: |
-          **/requirements/tests.txt
-          **/pyproject.toml
 
     - name: Build
       run: |
-        uv sync
-        uv pip install --requirement requirements/tests.txt
-
-    - run: uv pip list
+        uv sync --no-editable --group test
 
     - name: Run Image Tests
       run: |
-        uv run pytest --color=yes --mpl -m mpl_image_compare \
+        pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-summary=html \
                --mpl-results-path=lick_pytest_mpl_results \
                --mpl-baseline-path=tests/pytest_mpl_baseline
@@ -93,7 +76,7 @@ jobs:
     - name: Generate new image baseline
       if: failure()
       run: |
-        uv run pytest --color=yes --mpl -m mpl_image_compare \
+        pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-path=lick_pytest_mpl_new_baseline \
                --last-failed
 
@@ -127,15 +110,8 @@ jobs:
     - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
       with:
         python-version: '3.9'
-        cache-dependency-glob: |
-          **/requirements/typecheck.txt
-          **/pyproject.toml
 
     - name: Build
-      run: |
-        uv sync
-        uv pip install --requirement requirements/typecheck.txt
+      run: uv sync --group typecheck
 
-    - run: uv pip list
-
-    - run: uv run mypy src/lick
+    - run: mypy src/lick
