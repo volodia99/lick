@@ -4,8 +4,8 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "lick"
-version = "0.6.1"
-description = "Package that uses a Line Integral Convolution library to clothe a 2D field (ex: density field) with a LIC texture, given two vector fields (ex: velocity (vx, vy))"
+version = "0.7.0"
+description = "A high level Line Integral Convolution (LIC) library, including post-processing and visualization"
 authors = [
     { name = "G. Wafflard-Fernandez" },
 	{ name = "C.M.T. Robert" },
