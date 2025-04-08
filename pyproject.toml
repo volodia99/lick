@@ -66,3 +66,13 @@ filterwarnings = [
     "error",
     'ignore:datetime\.datetime\.utcfromtimestamp\(\) is deprecated:DeprecationWarning', # https://github.com/dateutil/dateutil/pull/1285
 ]
+
+[dependency-groups]
+test = [
+    "pytest>=6.1.0",
+    "pytest-mpl>=0.16.1",
+]
+typecheck = [
+    "matplotlib>=3.8.1",
+    "mypy>=1.15.0",
+]
