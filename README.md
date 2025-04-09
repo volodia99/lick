@@ -4,7 +4,11 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/charliermarsh/ruff)
 
 
-Line Integral Convolution Knit : Package that uses a Line Integral Convolution library to clothe a 2D field (ex: density field) with a LIC texture, given two vector fields (ex: velocity (vx, vy)).
+Line Integral Convolution Knit : clothe a 2D field (ex: density field) with a LIC texture,
+given two vector fields (ex: velocity (vx, vy)).
+
+This package builds on top of [rLIC](https://pypi.org/project/rlic), adding
+post-processing and visualization functionalities.
 
 Authors: Gaylor Wafflard-Fernandez, Clément Robert
 
