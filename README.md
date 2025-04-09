@@ -11,7 +11,7 @@ Authors: Gaylor Wafflard-Fernandez, Clément Robert
 Author-email: gaylor.wafflard@univ-grenoble-alpes.fr
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/volodia99/lick/main/imgs/lick.png" width="800"></a>
+    <img src="https://raw.githubusercontent.com/volodia99/lick/main/imgs/lick.png" width="600"></a>
 </p>
 
 ## Installation
