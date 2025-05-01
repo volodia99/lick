@@ -34,7 +34,6 @@ jobs:
 
     - name: Configure uv
       run: |
-        echo "UV_PYTHON=3.13" >> $GITHUB_ENV
         echo "UV_PRERELEASE=allow" >> $GITHUB_ENV
         echo "UV_INDEX=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple" >> $GITHUB_ENV
         echo "UV_INDEX_STRATEGY=unsafe-best-match" >> $GITHUB_ENV
@@ -45,4 +44,4 @@ jobs:
         uv sync --no-editable --group test
     - name: Run tests
       run: |
-        pytest --color=yes -ra
+        uv run --no-sync pytest --color=yes -ra

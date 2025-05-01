@@ -50,7 +50,7 @@ jobs:
 
     - name: Test
       shell: bash
-      run: pytest --color=yes -ra
+      run: uv run --no-sync pytest --color=yes -ra
 
   image-tests:
     name: Image tests
@@ -68,7 +68,8 @@ jobs:
 
     - name: Run Image Tests
       run: |
-        pytest --color=yes --mpl -m mpl_image_compare \
+        uv run --no-sync \
+            pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-summary=html \
                --mpl-results-path=lick_pytest_mpl_results \
                --mpl-baseline-path=tests/pytest_mpl_baseline
@@ -76,7 +77,8 @@ jobs:
     - name: Generate new image baseline
       if: failure()
       run: |
-        pytest --color=yes --mpl -m mpl_image_compare \
+        uv run --no-sync \
+            pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-path=lick_pytest_mpl_new_baseline \
                --last-failed
 
@@ -114,4 +116,4 @@ jobs:
     - name: Build
       run: uv sync --group typecheck
 
-    - run: mypy src/lick
+    - run: uv run --no-sync mypy src/lick
