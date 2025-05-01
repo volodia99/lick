@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-    - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+    - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
     - run: uv build
 
   unit-tests:
@@ -41,7 +41,7 @@ jobs:
     steps:
     - name: Checkout Source
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-    - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+    - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -50,7 +50,7 @@ jobs:
 
     - name: Test
       shell: bash
-      run: pytest --color=yes -ra
+      run: uv run --no-sync pytest --color=yes -ra
 
   image-tests:
     name: Image tests
@@ -58,7 +58,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-    - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+    - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       with:
         python-version: '3.12'
 
@@ -68,7 +68,8 @@ jobs:
 
     - name: Run Image Tests
       run: |
-        pytest --color=yes --mpl -m mpl_image_compare \
+        uv run --no-sync \
+            pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-summary=html \
                --mpl-results-path=lick_pytest_mpl_results \
                --mpl-baseline-path=tests/pytest_mpl_baseline
@@ -76,7 +77,8 @@ jobs:
     - name: Generate new image baseline
       if: failure()
       run: |
-        pytest --color=yes --mpl -m mpl_image_compare \
+        uv run --no-sync \
+            pytest --color=yes --mpl -m mpl_image_compare \
                --mpl-generate-path=lick_pytest_mpl_new_baseline \
                --last-failed
 
@@ -107,11 +109,11 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-    - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+    - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       with:
         python-version: '3.9'
 
     - name: Build
       run: uv sync --group typecheck
 
-    - run: mypy src/lick
+    - run: uv run --no-sync mypy src/lick

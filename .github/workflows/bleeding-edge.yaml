@@ -28,13 +28,12 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+    - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       with:
         python-version: 3.13
 
     - name: Configure uv
       run: |
-        echo "UV_PYTHON=3.13" >> $GITHUB_ENV
         echo "UV_PRERELEASE=allow" >> $GITHUB_ENV
         echo "UV_INDEX=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple" >> $GITHUB_ENV
         echo "UV_INDEX_STRATEGY=unsafe-best-match" >> $GITHUB_ENV
@@ -45,4 +44,4 @@ jobs:
         uv sync --no-editable --group test
     - name: Run tests
       run: |
-        pytest --color=yes -ra
+        uv run --no-sync pytest --color=yes -ra
