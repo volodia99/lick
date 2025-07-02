@@ -30,7 +30,8 @@ jobs:
 
     - uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6.3.1
       with:
-        python-version: 3.13
+        python-version: '3.14'
+        enable-cache: false
 
     - name: Configure uv
       run: |
@@ -38,10 +39,11 @@ jobs:
         echo "UV_INDEX=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple" >> $GITHUB_ENV
         echo "UV_INDEX_STRATEGY=unsafe-best-match" >> $GITHUB_ENV
 
-    - name: Build
-      run: |
-        uv lock --upgrade
-        uv sync --no-editable --group test
+    - run: uv lock --upgrade --no-build
+    # this additional step is needed as long as our requires-python
+    # (currently >=3.9) is lower than numpy's (currently >=3.11) or matplotlib's (currently >=3.10)
+    - run: uv lock -P numpy -P matplotlib
+    - run: uv sync --no-editable --group test
     - name: Run tests
       run: |
         uv run --no-sync pytest --color=yes -ra
