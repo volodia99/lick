@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import warnings
 from concurrent.futures import ThreadPoolExecutor
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import numpy as np
 import rlic
@@ -58,10 +58,10 @@ def interpol(
     *,
     method: str = "nearest",
     method_background: str = "nearest",
-    xmin: Optional[float] = None,
-    xmax: Optional[float] = None,
-    ymin: Optional[float] = None,
-    ymax: Optional[float] = None,
+    xmin: float | None = None,
+    xmax: float | None = None,
+    ymin: float | None = None,
+    ymax: float | None = None,
     size_interpolated: int = 800,
 ):
     from scipy.interpolate import griddata
@@ -152,10 +152,10 @@ def lick_box(
     size_interpolated: int = 800,
     method: str = "nearest",
     method_background: str = "nearest",
-    xmin: Optional[float] = None,
-    xmax: Optional[float] = None,
-    ymin: Optional[float] = None,
-    ymax: Optional[float] = None,
+    xmin: float | None = None,
+    xmax: float | None = None,
+    ymin: float | None = None,
+    ymax: float | None = None,
     niter_lic: int = 5,
     kernel_length: int = 101,
     light_source: bool = True,
@@ -205,20 +205,20 @@ def lick_box_plot(
     v2: np.ndarray,
     field: np.ndarray,
     *,
-    vmin: Optional[float] = None,
-    vmax: Optional[float] = None,
+    vmin: float | None = None,
+    vmax: float | None = None,
     size_interpolated: int = 800,
     method: str = "nearest",
     method_background: str = "nearest",
-    xmin: Optional[float] = None,
-    xmax: Optional[float] = None,
-    ymin: Optional[float] = None,
-    ymax: Optional[float] = None,
+    xmin: float | None = None,
+    xmax: float | None = None,
+    ymin: float | None = None,
+    ymax: float | None = None,
     niter_lic: int = 5,
     kernel_length: int = 101,
     log: bool = False,
     cmap=None,
-    nbin: Optional[int] = None,
+    nbin: int | None = None,
     color_stream: str = "w",
     cmap_stream=None,
     light_source: bool = True,
